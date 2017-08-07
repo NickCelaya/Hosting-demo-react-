@@ -105,7 +105,7 @@ n latest
 npm i -g npm
 ```
 
-## Swap -- Optional
+## Swap
 Swap instructions from [Zac Anger's](https://github.com/zacanger) wonderful [documentation](https://github.com/zacanger/doc).
 
 The most limited resource on your droplet will be RAM. They don't come with much on the $5 tier.
