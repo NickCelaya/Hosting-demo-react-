@@ -143,12 +143,16 @@ Then we can clone the project from Github.  (You'll need to use the https versio
 cd into your project, npm install, and any preprocessing (gulp, grunt, webpack) that you need to do. Also create and setup any config files that were in your .gitignore.    
 
 ```
-git clone https://github.com/Kedirech/hosting-chat-demo.git
-cd hosting-chat-demo/git
+git clone https://link-to-my-repo.com/github/projet.git
+cd my-project-folder-name
 npm install
-touch server_config.js
-nano server_config.js
+touch server/config.js (Or whatever you called your config files)
+nano server/config.js (Or whatever you called your config files)
 ```
+
+If your project is React with create-react-app run `npm run build` to create the build folder with your code changes.  If this process fails, double check that all your installed dependencies are in your package.json, and you've provided any configuration files you need to have 
+
+If you wave a different build process, run that (such as grunt gulp or webpack if you were doing another framework, or custom build process for react)
 
 Now run node to check for any server load errors (in case you forgot to --save all your dependencies.)
 
@@ -213,7 +217,9 @@ Unless you have lots of friends that enjoy accessing websites by ip (You know th
 
 ### NGINX - Optional
 
-If you don't want to use port 80, or you want to put multiple projects on one droplet, we can do that with nginx
+If you don't want to use port 80, or you want to put multiple projects on one droplet, we can do that with nginx.
+
+nginx will work like middleware for all the traffic coming to your droplet.  We can use it to watch for specific domain names, or url parameters, then route it to different parts of our droplet based on those factors.
 
 ```
 sudo apt-get install nginx;
@@ -223,16 +229,18 @@ Next we are going to go to this folder.
 ```
 cd /etc/nginx/sites-available/
 ```
-*if this folder does not exist instead go to the ```cd /etc/nginx/conf.d``` folder*
+*if this folder does not exist instead go to the `cd /etc/nginx/conf.d` folder*
 
-We can set up each individual servers by editing the default file in this folder.  ```nano default``` Feel free to use vim, or another command line editor if you want.  
+We can set up each individual servers by editing the default file in this folder.  `nano default`
 
-*if there wasn't a sites-avaiable folder you will use ```nano default.conf``` instead*  
+*if there wasn't a sites-avaiable folder you will use `nano default.conf` instead*  
 
 This example sets up 3 different servers listening for different domains/subdomains.
 
 They should all listen to port 80, that's the default for web-traffic. The server_name should be changed for each server, this is the domain that you want associated with each server.  Also the proxy_pass needs to be changed to match the port each is running on.
 ```
+# Basic server block setup 
+
 server {
     listen 80;
 
@@ -248,10 +256,11 @@ server {
     }
 }
 
+# Basic server + www subdomain on a single setup
 server {
     listen 80;
 
-    server_name brackcarmony.com;
+    server_name brackcarmony.com www.brackcarmony.com;
 
     location / {
         proxy_pass http://127.0.0.1:8083;
@@ -263,6 +272,7 @@ server {
     }
 }
 
+# Custom Subdomain Setup
 server {
     listen 80;
 
@@ -270,6 +280,26 @@ server {
 
     location / {
         proxy_pass http://127.0.0.1:8084;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+
+# Route based on the url provided after the domain
+# This will route traffice that starts with brackcarmony.com/projects/ to port 8084 
+# putting the / at the end of the proxy_pass will make it so that your server code will
+# ignore the /projects/ part of the url. So that you can write your backend server as if it
+# were being accessed from just /
+server {
+    listen 80;
+
+    server_name brackcarmony.com;
+
+    location /projects/ {
+        proxy_pass http://127.0.0.1:8085/;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
