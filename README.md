@@ -1,4 +1,4 @@
-# Digital Ocean Hosting Demo
+# Digital Ocean Hosting Demo("create-react-app")
 
 ## Hosting your node projects on Digital Ocean.
 
@@ -150,7 +150,7 @@ touch server/config.js (Or whatever you called your config files)
 nano server/config.js (Or whatever you called your config files)
 ```
 
-If your project is React with create-react-app run `npm run build` to create the build folder with your code changes.  If this process fails, double check that all your installed dependencies are in your package.json, and you've provided any configuration files you need to have 
+If your project is React with create-react-app run `npm run build` to create the build folder with your code changes.  If this process fails, double check that all your installed dependencies are in your package.json, and you've provided any configuration files you need to have
 
 If you wave a different build process, run that (such as grunt gulp or webpack if you were doing another framework, or custom build process for react)
 
@@ -209,7 +209,7 @@ forever columns add dir
 
 For your projects you have a few options.  You can install Postgres on your server.  Then your project will look at the local machine for it's database the same way that it does when running on your local machine.  The downside to this is if you like working with tools like pgAdmin, it can be difficult to get configured correctly.
 
-Or you can go with a DB as a service such as [ElephantSQL](https://www.elephantsql.com/). ElephantSQL has a free tier with 20MB disk space.  Not a ton, but for small project not needing to worry about it's set up may be worth it. 
+Or you can go with a DB as a service such as [ElephantSQL](https://www.elephantsql.com/). ElephantSQL has a free tier with 20MB disk space.  Not a ton, but for small project not needing to worry about it's set up may be worth it.
 
 ### Setting Up Domains
 
@@ -239,7 +239,7 @@ This example sets up 3 different servers listening for different domains/subdoma
 
 They should all listen to port 80, that's the default for web-traffic. The server_name should be changed for each server, this is the domain that you want associated with each server.  Also the proxy_pass needs to be changed to match the port each is running on.
 ```
-# Basic server block setup 
+# Basic server block setup
 
 server {
     listen 80;
@@ -289,7 +289,7 @@ server {
 }
 
 # Route based on the url provided after the domain
-# This will route traffice that starts with brackcarmony.com/projects/ to port 8084 
+# This will route traffice that starts with brackcarmony.com/projects/ to port 8084
 # putting the / at the end of the proxy_pass will make it so that your server code will
 # ignore the /projects/ part of the url. So that you can write your backend server as if it
 # were being accessed from just /
@@ -320,11 +320,11 @@ We are going to name all the servers we want to keep track of, along with the cr
 ```
 Host <nickname> // This will be our nickname for the server
     HostName <myServer.com> // Either the IP adress or domain name that you want to connect to
-    Port 22 // This is 22 by default for SSH connections 
+    Port 22 // This is 22 by default for SSH connections
     RemoteForward 52698 localhost:52698 // This is if you want to use the rmate or ratom packages
     User username // either root or one of the users you created on the server to run things
     IdentityFile ~/.ssh/id_rsa // Path to private key used for this connection in case you have multiple
-    
+
 Host q
     HostName q.devmountain.com
     Port 22
@@ -339,4 +339,4 @@ Host brack
     User root
 ```
 
-After creating this you can just run ```ssh brack``` in place of ```ssh root@brackcarmony.com``` 
+After creating this you can just run ```ssh brack``` in place of ```ssh root@brackcarmony.com```
